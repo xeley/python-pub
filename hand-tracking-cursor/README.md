@@ -2,7 +2,7 @@
 
 Control your system cursor using hand tracking via the webcam. Your index finger drives the mouse; a live preview shows hand landmarks. Press **q** to quit.
 
-This project was motivated by the article [*I Ditched My Mouse: How I Control My Computer With Hand Gestures (In 60 Lines of Python)*](https://towardsdatascience.com/i-ditched-my-mouse-how-i-control-my-computer-with-hand-gestures-in-60-lines-of-python/) (Towards Data Science).
+This project was motivated by the article [*I Ditched My Mouse: How I Control My Computer With Hand Gestures (In 60 Lines of Python)*](https://towardsdatascience.com/i-ditched-my-mouse-how-i-control-my-computer-with-hand-gestures-in-60-lines-of-python/) (Towards Data Science). Thank you to Aakash Goswami.
 
 ## Features
 

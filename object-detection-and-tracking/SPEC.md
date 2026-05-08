@@ -115,7 +115,7 @@ All code must follow the **IOSP (Integration Operation Segregation Principle)**:
     Given the detection loop is running
     When each frame is rendered
     Then a key hints bar should be visible in the bottom-left corner of the window
-    And it should show "q  quit    r  reset size"
+    And it should show "q  quit    r  reset size    s  screenshot"
 
   Scenario: Window opens at default size
     Given the application starts
@@ -132,6 +132,14 @@ All code must follow the **IOSP (Integration Operation Segregation Principle)**:
     Given the user has resized the detection window
     When the user presses the "r" key
     Then the window should snap back to the default 640×480 size
+
+  Scenario: Screenshot is saved via keyboard shortcut
+    Given the detection window is open and objects are being detected
+    When the user presses the "s" key
+    Then the current annotated frame should be saved as a PNG file
+    And the file should be written to the user's Downloads folder
+    And the filename should follow the pattern screenshot_YYYYMMDD_HHMMSS.png
+    And the saved path should be printed to the terminal
 
   Scenario: Application quits via keyboard shortcut
     Given the detection window is open

@@ -4,6 +4,9 @@ Owns the event loop, startup/shutdown, and I/O adapter wiring.
 Business logic is delegated entirely to Integrations and Operations.
 """
 import time
+from datetime import datetime
+
+import cv2
 
 from .adapters.camera import CameraAdapter
 from .adapters.display import DisplayAdapter
@@ -11,6 +14,7 @@ from .adapters.yolo_model import YoloModelAdapter
 from .data.models import DetectionConfig
 from .integrations.detection import annotate_frame, detect_objects, measure_fps
 from .operations.motion import is_frame_valid
+from .operations.screenshot import build_screenshot_path, default_screenshot_folder
 
 
 def main() -> None:
@@ -24,6 +28,7 @@ def main() -> None:
         return
 
     prev_time = time.time()
+    screenshot_folder = default_screenshot_folder()
 
     while True:
         frame = camera.read()
@@ -45,6 +50,10 @@ def main() -> None:
             break
         if key == "r":
             display.reset_size(config.display_width, config.display_height)
+        if key == "s":
+            path = build_screenshot_path(screenshot_folder, datetime.now())
+            cv2.imwrite(str(path), annotated)
+            print(f"Screenshot saved: {path}")
 
     camera.release()
     display.close()

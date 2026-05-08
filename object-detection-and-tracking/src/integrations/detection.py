@@ -30,4 +30,4 @@ def annotate_frame(
 ) -> np.ndarray:
     with_boxes = draw_detections(frame, detections, config.box_thickness)
     with_fps = draw_fps(with_boxes, fps)
-    return draw_key_hints(with_fps, "q  quit    r  reset size")
+    return draw_key_hints(with_fps, "q  quit    r  reset size    s  screenshot")

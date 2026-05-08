@@ -61,6 +61,7 @@ python -m src.main
 |---|---|
 | `q` | Quit the application |
 | `r` | Reset window to default size (640×480) |
+| `s` | Save a screenshot (with annotations) to `~/Downloads/screenshot_YYYYMMDD_HHMMSS.png` |
 
 ## Specification
 
@@ -88,6 +89,7 @@ object-detection-and-tracking/
 │   │   └── models.py              # Immutable data shapes (BoundingBox, Detection, DetectionConfig)
 │   ├── operations/
 │   │   ├── yolo.py                # Pure leaf functions — parse YOLO results, draw labelled boxes
+│   │   ├── screenshot.py          # Pure leaf functions — screenshot path construction
 │   │   └── motion.py              # Pure leaf functions — frame-diff motion utilities
 │   ├── integrations/
 │   │   └── detection.py           # Orchestration — detect_objects, annotate_frame

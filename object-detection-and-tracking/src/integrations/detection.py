@@ -6,7 +6,7 @@ import numpy as np
 
 from ..adapters.yolo_model import YoloModelAdapter
 from ..data.models import Detection, DetectionConfig
-from ..operations.yolo import draw_detections, parse_yolo_detections
+from ..operations.yolo import draw_detections, draw_key_hints, parse_yolo_detections
 
 
 def detect_objects(
@@ -23,4 +23,5 @@ def annotate_frame(
     detections: list[Detection],
     config: DetectionConfig,
 ) -> np.ndarray:
-    return draw_detections(frame, detections, config.box_thickness)
+    with_boxes = draw_detections(frame, detections, config.box_thickness)
+    return draw_key_hints(with_boxes, "q  quit    r  reset size")

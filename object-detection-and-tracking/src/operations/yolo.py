@@ -42,6 +42,18 @@ def parse_yolo_detections(results, confidence_threshold: float) -> list[Detectio
     return detections
 
 
+def draw_key_hints(frame: np.ndarray, hints: str) -> np.ndarray:
+    output = frame.copy()
+    font = cv2.FONT_HERSHEY_SIMPLEX
+    scale, thickness = 0.55, 1
+    (text_w, text_h), baseline = cv2.getTextSize(hints, font, scale, thickness)
+    margin = 8
+    x, y = margin, output.shape[0] - margin
+    cv2.rectangle(output, (x - 4, y - text_h - baseline - 4), (x + text_w + 4, y + 4), (0, 0, 0), -1)
+    cv2.putText(output, hints, (x, y - baseline), font, scale, (255, 255, 255), thickness)
+    return output
+
+
 def draw_detections(frame: np.ndarray, detections: list[Detection], thickness: int) -> np.ndarray:
     output = frame.copy()
     for det in detections:

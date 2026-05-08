@@ -23,3 +23,5 @@ class DetectionConfig:
     confidence_threshold: float = 0.5
     box_thickness: int = 2
     window_title: str = "Object Detection"
+    display_width: int = 640
+    display_height: int = 480

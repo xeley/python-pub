@@ -14,7 +14,7 @@ from .operations.motion import is_frame_valid
 def main() -> None:
     config = DetectionConfig()
     camera = CameraAdapter(config.camera_index)
-    display = DisplayAdapter(config.window_title)
+    display = DisplayAdapter(config.window_title, config.display_width, config.display_height)
     model = YoloModelAdapter(config.model_name)
 
     if not camera.is_open():
@@ -32,8 +32,11 @@ def main() -> None:
         annotated = annotate_frame(frame, detections, config)
         display.show(annotated)
 
-        if display.should_quit():
+        key = display.read_key()
+        if key == "q":
             break
+        if key == "r":
+            display.reset_size(config.display_width, config.display_height)
 
     camera.release()
     display.close()

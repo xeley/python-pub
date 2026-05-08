@@ -57,7 +57,15 @@ On first run the YOLOv8n weights (~6 MB) are downloaded automatically.
 python -m src.main
 ```
 
-Press **q** to quit the detection window.
+| Key | Action |
+|---|---|
+| `q` | Quit the application |
+| `r` | Reset window to default size (640×480) |
+
+## Specification
+
+The full behavioural specification for this project is in [`SPEC.md`](SPEC.md).
+It is written in Gherkin (BDD) and covers all detection, classification, display, and error-handling scenarios in enough detail to regenerate the project from scratch.
 
 ## Configuration
 

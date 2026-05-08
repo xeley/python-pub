@@ -42,6 +42,23 @@ def parse_yolo_detections(results, confidence_threshold: float) -> list[Detectio
     return detections
 
 
+def compute_fps(prev_time: float, curr_time: float) -> float:
+    elapsed = curr_time - prev_time
+    return 1.0 / elapsed if elapsed > 0 else 0.0
+
+
+def draw_fps(frame: np.ndarray, fps: float) -> np.ndarray:
+    output = frame.copy()
+    text = f"FPS: {fps:.1f}"
+    font = cv2.FONT_HERSHEY_SIMPLEX
+    (text_w, text_h), baseline = cv2.getTextSize(text, font, 0.65, 2)
+    margin = 8
+    x, y = output.shape[1] - text_w - margin - 4, margin + text_h + 4
+    cv2.rectangle(output, (x - 4, margin), (x + text_w + 4, margin + text_h + baseline + 6), (0, 0, 0), -1)
+    cv2.putText(output, text, (x, y), font, 0.65, (0, 255, 0), 2)
+    return output
+
+
 def draw_key_hints(frame: np.ndarray, hints: str) -> np.ndarray:
     output = frame.copy()
     font = cv2.FONT_HERSHEY_SIMPLEX

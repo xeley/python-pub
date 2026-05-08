@@ -6,7 +6,7 @@ import numpy as np
 
 from ..adapters.yolo_model import YoloModelAdapter
 from ..data.models import Detection, DetectionConfig
-from ..operations.yolo import draw_detections, draw_key_hints, parse_yolo_detections
+from ..operations.yolo import compute_fps, draw_detections, draw_fps, draw_key_hints, parse_yolo_detections
 
 
 def detect_objects(
@@ -18,10 +18,16 @@ def detect_objects(
     return parse_yolo_detections(results, config.confidence_threshold)
 
 
+def measure_fps(prev_time: float, curr_time: float) -> float:
+    return compute_fps(prev_time, curr_time)
+
+
 def annotate_frame(
     frame: np.ndarray,
     detections: list[Detection],
+    fps: float,
     config: DetectionConfig,
 ) -> np.ndarray:
     with_boxes = draw_detections(frame, detections, config.box_thickness)
-    return draw_key_hints(with_boxes, "q  quit    r  reset size")
+    with_fps = draw_fps(with_boxes, fps)
+    return draw_key_hints(with_fps, "q  quit    r  reset size")

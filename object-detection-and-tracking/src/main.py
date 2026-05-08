@@ -3,11 +3,13 @@ Application shell (API layer).
 Owns the event loop, startup/shutdown, and I/O adapter wiring.
 Business logic is delegated entirely to Integrations and Operations.
 """
+import time
+
 from .adapters.camera import CameraAdapter
 from .adapters.display import DisplayAdapter
 from .adapters.yolo_model import YoloModelAdapter
 from .data.models import DetectionConfig
-from .integrations.detection import annotate_frame, detect_objects
+from .integrations.detection import annotate_frame, detect_objects, measure_fps
 from .operations.motion import is_frame_valid
 
 
@@ -21,6 +23,8 @@ def main() -> None:
         display.show_error("Camera unavailable — could not open camera feed.")
         return
 
+    prev_time = time.time()
+
     while True:
         frame = camera.read()
 
@@ -28,8 +32,12 @@ def main() -> None:
             display.show_error("Camera unavailable — lost camera feed.")
             break
 
+        curr_time = time.time()
+        fps = measure_fps(prev_time, curr_time)
+        prev_time = curr_time
+
         detections = detect_objects(model, frame, config)
-        annotated = annotate_frame(frame, detections, config)
+        annotated = annotate_frame(frame, detections, fps, config)
         display.show(annotated)
 
         key = display.read_key()

@@ -15,6 +15,23 @@ Each video frame is passed through a YOLOv8 neural network:
 
 When the camera feed drops the system surfaces an error and exits cleanly.
 
+## Technology Stack
+
+| Concern | Technology |
+|---|---|
+| **Object detection model** | [YOLOv8](https://docs.ultralytics.com/) (You Only Look Once, v8) by Ultralytics — a single-pass convolutional neural network that detects 80 object classes from the [COCO dataset](https://cocodataset.org/) (people, animals, vehicles, everyday objects, …) in one forward pass per frame |
+| **Model interface** | [Ultralytics](https://github.com/ultralytics/ultralytics) Python package — provides pre-trained weights, inference API, and automatic weight download |
+| **Computer vision / I/O** | [OpenCV](https://opencv.org/) (`cv2`) — camera capture, frame decoding, bounding-box drawing, and display window |
+| **Numerical computing** | [NumPy](https://numpy.org/) — frame data representation as `ndarray` |
+| **Language** | Python 3.10+ |
+
+### Why YOLOv8?
+
+- **Real-time capable** — the nano variant (`yolov8n`) runs at high FPS on CPU, making it suitable for live camera feeds without a GPU.
+- **Pre-trained** — no training required; weights are downloaded automatically on first run (~6 MB).
+- **Multi-class** — identifies the object's class (e.g. `person`, `cat`, `dog`) rather than just flagging motion, enabling labelled boxes.
+- **Scalable** — swap `yolov8n` for `yolov8s`, `yolov8m`, or `yolov8l` in `DetectionConfig` to trade speed for accuracy.
+
 ## Requirements
 
 - Python 3.10+

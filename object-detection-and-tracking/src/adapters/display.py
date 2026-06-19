@@ -23,5 +23,8 @@ class DisplayAdapter:
     def reset_size(self, width: int, height: int) -> None:
         cv2.resizeWindow(self._title, width, height)
 
+    def save_screenshot(self, frame: np.ndarray, path) -> None:
+        cv2.imwrite(str(path), frame)
+
     def close(self) -> None:
         cv2.destroyAllWindows()

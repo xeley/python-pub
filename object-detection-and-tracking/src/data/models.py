@@ -22,6 +22,6 @@ class DetectionConfig:
     model_name: str = "yolov8n.pt"
     confidence_threshold: float = 0.5
     box_thickness: int = 2
-    window_title: str = "Object Detection"
+    window_title: str = "Object Detection and Tracking"
     display_width: int = 640
     display_height: int = 480

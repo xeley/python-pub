@@ -6,8 +6,6 @@ Business logic is delegated entirely to Integrations and Operations.
 import time
 from datetime import datetime
 
-import cv2
-
 from .adapters.camera import CameraAdapter
 from .adapters.display import DisplayAdapter
 from .adapters.yolo_model import YoloModelAdapter
@@ -52,7 +50,7 @@ def main() -> None:
             display.reset_size(config.display_width, config.display_height)
         if key == "s":
             path = build_screenshot_path(screenshot_folder, datetime.now())
-            cv2.imwrite(str(path), annotated)
+            display.save_screenshot(annotated, path)
             print(f"Screenshot saved: {path}")
 
     camera.release()

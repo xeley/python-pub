@@ -1,0 +1,83 @@
+"""
+Operations: pure leaf functions for YOLO result parsing and frame annotation.
+Each function uses only cv2/numpy/builtins — no calls to other business functions.
+"""
+import cv2
+import numpy as np
+
+from ..data.models import BoundingBox, Detection
+
+# Fixed palette; index is determined by hashing the class label so the same
+# class always gets the same colour across frames.
+_PALETTE: list[tuple[int, int, int]] = [
+    (0, 0, 255),    # red
+    (0, 255, 255),  # yellow
+    (255, 0, 0),    # blue
+    (0, 255, 0),    # green
+    (255, 0, 255),  # magenta
+    (0, 128, 255),  # orange
+    (128, 0, 255),  # purple
+    (255, 255, 0),  # cyan
+]
+
+
+def parse_yolo_detections(results, confidence_threshold: float) -> list[Detection]:
+    detections: list[Detection] = []
+    for result in results:
+        boxes = result.boxes
+        names = result.names
+        for i in range(len(boxes)):
+            confidence = float(boxes.conf[i])
+            if confidence < confidence_threshold:
+                continue
+            x1, y1, x2, y2 = map(int, boxes.xyxy[i])
+            label = names[int(boxes.cls[i])]
+            detections.append(
+                Detection(
+                    bbox=BoundingBox(x=x1, y=y1, width=x2 - x1, height=y2 - y1),
+                    label=label,
+                    confidence=confidence,
+                )
+            )
+    return detections
+
+
+def compute_fps(prev_time: float, curr_time: float) -> float:
+    elapsed = curr_time - prev_time
+    return 1.0 / elapsed if elapsed > 0 else 0.0
+
+
+def draw_fps(frame: np.ndarray, fps: float) -> np.ndarray:
+    output = frame.copy()
+    text = f"FPS: {fps:.1f}"
+    font = cv2.FONT_HERSHEY_SIMPLEX
+    (text_w, text_h), baseline = cv2.getTextSize(text, font, 0.65, 2)
+    margin = 8
+    x, y = output.shape[1] - text_w - margin - 4, margin + text_h + 4
+    cv2.rectangle(output, (x - 4, margin), (x + text_w + 4, margin + text_h + baseline + 6), (0, 0, 0), -1)
+    cv2.putText(output, text, (x, y), font, 0.65, (0, 255, 0), 2)
+    return output
+
+
+def draw_key_hints(frame: np.ndarray, hints: str) -> np.ndarray:
+    output = frame.copy()
+    font = cv2.FONT_HERSHEY_SIMPLEX
+    scale, thickness = 0.55, 1
+    (text_w, text_h), baseline = cv2.getTextSize(hints, font, scale, thickness)
+    margin = 8
+    x, y = margin, output.shape[0] - margin
+    cv2.rectangle(output, (x - 4, y - text_h - baseline - 4), (x + text_w + 4, y + 4), (0, 0, 0), -1)
+    cv2.putText(output, hints, (x, y - baseline), font, scale, (255, 255, 255), thickness)
+    return output
+
+
+def draw_detections(frame: np.ndarray, detections: list[Detection], thickness: int) -> np.ndarray:
+    output = frame.copy()
+    for det in detections:
+        color = _PALETTE[hash(det.label) % len(_PALETTE)]
+        b = det.bbox
+        cv2.rectangle(output, (b.x, b.y), (b.x + b.width, b.y + b.height), color, thickness)
+        (text_w, text_h), _ = cv2.getTextSize(det.label, cv2.FONT_HERSHEY_SIMPLEX, 0.7, 2)
+        cv2.rectangle(output, (b.x, b.y - text_h - 10), (b.x + text_w + 6, b.y), color, -1)
+        cv2.putText(output, det.label, (b.x + 3, b.y - 4), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
+    return output
